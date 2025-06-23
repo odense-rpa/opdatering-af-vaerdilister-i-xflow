@@ -1,7 +1,7 @@
 [project]
 name = "process-template"
 version = "0.1.0"
-description = "Add your description here"
+description = "Pulls all 'organizations' from KMD Nexus and populates a Value List in XFlow"
 readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
