@@ -15,7 +15,7 @@ værdilisteklient: ValueListClient = None
 procesnavn = "Opdatering af værdilister i Xflow"
 
 
-async def opdater_organisationer_i_nexus():
+async def opdater_organisationer_i_XFlow():
     logger = logging.getLogger(__name__)
     logger.info("Opdaterer organisationer i Nexus")
 
@@ -32,6 +32,27 @@ async def opdater_organisationer_i_nexus():
         værdilisteklient.update_value_list(
             værdiliste_uuid,
             organisationer,
+        )
+    except Exception as e:
+        logger.error(f"Failed to update value list: {e}")
+
+async def opdater_leverandører_i_XFlow():
+    logger = logging.getLogger(__name__)
+    logger.info("Opdaterer leverandører i XFlow")
+
+    # Finder værdiliste samt UUID for værdilisten
+    værdiliste = værdilisteklient.search_value_lists("Nexus - leverandører")
+    værdiliste_uuid = værdiliste[0]["id"] if værdiliste else None
+
+    # Henter leverandører fra Nexus
+    alle_leverandører = nexus_organisationer.get_suppliers()
+
+    # Laver listen om til det format, der kræves af Xflow
+    leverandører = [{"value": x["name"], "key": str(i + 1), "oprettetAf": "RPA"} for i, x in enumerate(alle_leverandører)]
+    try:
+        værdilisteklient.update_value_list(
+            værdiliste_uuid,
+            leverandører,
         )
     except Exception as e:
         logger.error(f"Failed to update value list: {e}")
@@ -72,5 +93,7 @@ if __name__ == "__main__":
         client=xflowklient,
     )
 
-    asyncio.run(opdater_organisationer_i_nexus())
+    asyncio.run(opdater_organisationer_i_XFlow())
+
+    asyncio.run(opdater_leverandører_i_XFlow())
 
