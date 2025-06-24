@@ -15,11 +15,35 @@ værdilisteklient: ValueListClient = None
 procesnavn = "Opdatering af værdilister i Xflow"
 
 
+async def opdater_organisationer_i_nexus():
+    logger = logging.getLogger(__name__)
+    logger.info("Opdaterer organisationer i Nexus")
+
+    # Finder værdiliste samt UUID for værdilisten
+    værdiliste = værdilisteklient.search_value_lists("Nexus - organisationer")
+    værdiliste_uuid = værdiliste[0]["id"] if værdiliste else None
+
+    # Henter organisationer fra Nexus
+    alle_organisationer = nexus_organisationer.get_organizations()
+    
+    # Laver listen om til det format, der kræves af Xflow
+    organisationer = [{"value": x["name"], "key": str(i + 1), "oprettetAf": "RPA"} for i, x in enumerate(alle_organisationer)]
+    try:
+        værdilisteklient.update_value_list(
+            værdiliste_uuid,
+            organisationer,
+        )
+    except Exception as e:
+        logger.error(f"Failed to update value list: {e}")
+    
+
+    
+
 
 async def populate_queue(workqueue: Workqueue):
     logger = logging.getLogger(__name__)
 
-    logger.info("Hello from populate workqueue!")
+
 
 
 async def process_workqueue(workqueue: Workqueue):
@@ -68,6 +92,11 @@ if __name__ == "__main__":
         instance=XFlowcredentials_test.data["instance"],
         token=XFlowcredentials_test.password
     )
+    værdilisteklient = ValueListClient(
+        client=xflowklient,
+    )
+
+    asyncio.run(opdater_organisationer_i_nexus())
 
     # Queue management
     if "--queue" in sys.argv:
