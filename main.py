@@ -54,6 +54,9 @@ async def opdater_leverandører_i_XFlow():
             værdiliste_uuid,
             leverandører,
         )
+        afregningsklient.track_task(
+            process_name=procesnavn,
+        )
     except Exception as e:
         logger.error(f"Failed to update value list: {e}")
     
