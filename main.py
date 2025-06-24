@@ -36,32 +36,8 @@ async def opdater_organisationer_i_nexus():
     except Exception as e:
         logger.error(f"Failed to update value list: {e}")
     
-
     
 
-
-async def populate_queue(workqueue: Workqueue):
-    logger = logging.getLogger(__name__)
-
-
-
-
-async def process_workqueue(workqueue: Workqueue):
-    logger = logging.getLogger(__name__)
-
-    logger.info("Hello from process workqueue!")
-
-    for item in workqueue:
-        with item:
-            data = item.get_data_as_dict()
-
-            try:
-                # Process the item here
-                pass
-            except WorkItemError as e:
-                # A WorkItemError represents a soft error that indicates the item should be passed to manual processing or a business logic fault
-                logger.error(f"Error processing item: {data}. Error: {e}")
-                item.fail(str(e))
 
 
 if __name__ == "__main__":
@@ -98,11 +74,3 @@ if __name__ == "__main__":
 
     asyncio.run(opdater_organisationer_i_nexus())
 
-    # Queue management
-    if "--queue" in sys.argv:
-        workqueue.clear_workqueue("new")
-        asyncio.run(populate_queue(workqueue))
-        exit(0)
-
-    # Process workqueue
-    asyncio.run(process_workqueue(workqueue))
