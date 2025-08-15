@@ -22,6 +22,9 @@ async def opdater_organisationer_i_XFlow():
     # Finder værdiliste samt UUID for værdilisten
     værdiliste = værdilisteklient.search_value_lists("Nexus - organisationer")
     værdiliste_uuid = værdiliste[0]["id"] if værdiliste else None
+    if værdiliste_uuid is None:
+        logger.error("Værdiliste 'Nexus - organisationer' blev ikke fundet.")
+        return
 
     # Henter organisationer fra Nexus
     alle_organisationer = nexus_organisationer.get_organizations()
@@ -43,6 +46,9 @@ async def opdater_leverandører_i_XFlow():
     # Finder værdiliste samt UUID for værdilisten
     værdiliste = værdilisteklient.search_value_lists("Nexus - leverandører")
     værdiliste_uuid = værdiliste[0]["id"] if værdiliste else None
+    if værdiliste_uuid is None:
+        logger.error("Værdiliste 'Nexus - leverandører' blev ikke fundet.")
+        return
 
     # Henter leverandører fra Nexus
     alle_leverandører = nexus_organisationer.get_suppliers()
@@ -72,7 +78,8 @@ if __name__ == "__main__":
     # Initialize external systems for automation here..
     Nexuscredentials = Credential.get_credential("KMD Nexus - produktion")
     Afregningscredentials = Credential.get_credential("Odense SQL Server")
-    XFlowcredentials_test = Credential.get_credential("Xflow - test")
+    #XFlowcredentials_test = Credential.get_credential("Xflow - test")
+    XFlowcredentials_prod = Credential.get_credential("Xflow - produktion")
     
 
     nexusklient = NexusClient(
@@ -89,8 +96,8 @@ if __name__ == "__main__":
     )
 
     xflowklient = XFlowClient(
-        instance=XFlowcredentials_test.data["instance"],
-        token=XFlowcredentials_test.password
+        instance=XFlowcredentials_prod.data["instance"],
+        token=XFlowcredentials_prod.password
     )
     værdilisteklient = ValueListClient(
         client=xflowklient,
