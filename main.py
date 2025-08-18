@@ -3,12 +3,12 @@ import logging
 import sys
 
 from automation_server_client import AutomationServer, Workqueue, WorkItemError, Credential
-from kmd_nexus_client import NexusClient, OrganizationsClient
+from kmd_nexus_client import NexusClient, OrganisationerClient
 from odk_tools.tracking import Tracker
 from xflow_client import XFlowClient, ValueListClient
 
 nexusklient: NexusClient = None
-nexus_organisationer: OrganizationsClient = None
+nexus_organisationer: OrganisationerClient = None
 afregningsklient: Tracker = None
 xflowklient: XFlowClient = None
 værdilisteklient: ValueListClient = None
@@ -27,7 +27,7 @@ async def opdater_organisationer_i_XFlow():
         return
 
     # Henter organisationer fra Nexus
-    alle_organisationer = nexus_organisationer.get_organizations()
+    alle_organisationer = nexus_organisationer.hent_organisationer()
     
     # Laver listen om til det format, der kræves af Xflow
     organisationer = [{"value": x["name"], "key": str(i + 1), "oprettetAf": "RPA"} for i, x in enumerate(alle_organisationer)]
@@ -51,7 +51,7 @@ async def opdater_leverandører_i_XFlow():
         return
 
     # Henter leverandører fra Nexus
-    alle_leverandører = nexus_organisationer.get_suppliers()
+    alle_leverandører = nexus_organisationer.hent_leverandører()
 
     # Laver listen om til det format, der kræves af Xflow
     leverandører = [{"value": x["name"], "key": str(i + 1), "oprettetAf": "RPA"} for i, x in enumerate(alle_leverandører)]
@@ -88,7 +88,7 @@ if __name__ == "__main__":
         instance=Nexuscredentials.data["instance"]
     )
 
-    nexus_organisationer = OrganizationsClient(nexus_client=nexusklient)
+    nexus_organisationer = OrganisationerClient(nexus_client=nexusklient)
 
     afregningsklient = Tracker(
         username=Afregningscredentials.username,
