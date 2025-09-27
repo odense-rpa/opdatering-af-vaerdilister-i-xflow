@@ -30,7 +30,7 @@ async def opdater_organisationer_i_XFlow():
     alle_organisationer = nexus_organisationer.hent_organisationer()
     
     # Laver listen om til det format, der kræves af Xflow
-    organisationer = [{"value": x["name"], "key": str(i + 1), "oprettetAf": "RPA"} for i, x in enumerate(alle_organisationer)]
+    organisationer = [{"value": x["name"], "key": str(i + 1), "oprettetAf": "RPA", "indeks" : str(i + 1)} for i, x in enumerate(alle_organisationer)]
     try:
         værdilisteklient.update_value_list(
             værdiliste_uuid,
@@ -55,7 +55,7 @@ async def opdater_leverandører_i_XFlow():
     alle_leverandører = nexus_organisationer.hent_leverandører()
 
     # Laver listen om til det format, der kræves af Xflow
-    leverandører = [{"value": x["name"], "key": str(i + 1), "oprettetAf": "RPA"} for i, x in enumerate(alle_leverandører)]
+    leverandører = [{"value": x["name"], "key": str(i + 1), "oprettetAf": "RPA", "indeks" : str(i + 1)} for i, x in enumerate(alle_leverandører)]
     try:
         værdilisteklient.update_value_list(
             værdiliste_uuid,
@@ -86,7 +86,7 @@ async def opdater_organisationsleverandører_i_XFlow():
                     any(paragraf in x.get("paragraph", "") for paragraf in godkendte_paragraffer)]
 
     # Laver listen om til det format, der kræves af Xflow
-    leverandører = [{"value": x["name"], "key": str(i + 1), "oprettetAf": "RPA"} for i, x in enumerate(alle_leverandører)]
+    leverandører = [{"value": x["name"], "key": str(i + 1), "oprettetAf": "RPA", "indeks" : str(i + 1)} for i, x in enumerate(alle_leverandører)]
     try:
         værdilisteklient.update_value_list(
             værdiliste_uuid,
@@ -105,8 +105,8 @@ if __name__ == "__main__":
     # Initialize external systems for automation here..
     Nexuscredentials = Credential.get_credential("KMD Nexus - produktion")
     Afregningscredentials = Credential.get_credential("Odense SQL Server")
-    #XFlowcredentials_test = Credential.get_credential("Xflow - test")
-    XFlowcredentials_prod = Credential.get_credential("Xflow - produktion")
+    # XFlowcredentials = Credential.get_credential("Xflow - test")
+    XFlowcredentials = Credential.get_credential("Xflow - produktion")
     
 
     nexusklient = NexusClient(
@@ -123,16 +123,16 @@ if __name__ == "__main__":
     )
 
     xflowklient = XFlowClient(
-        instance=XFlowcredentials_prod.data["instance"],
-        token=XFlowcredentials_prod.password
+        instance=XFlowcredentials.data["instance"],
+        token=XFlowcredentials.password
     )
     værdilisteklient = ValueListClient(
         client=xflowklient,
     )
 
-    # asyncio.run(opdater_organisationer_i_XFlow())
+    asyncio.run(opdater_organisationer_i_XFlow())
 
-    # asyncio.run(opdater_leverandører_i_XFlow())
+    asyncio.run(opdater_leverandører_i_XFlow())
 
     asyncio.run(opdater_organisationsleverandører_i_XFlow())
 
