@@ -4,6 +4,7 @@ import sys
 
 from automation_server_client import AutomationServer, Workqueue, WorkItemError, Credential
 from kmd_nexus_client import NexusClient, OrganisationerClient
+from kmd_nexus_client.tree_helpers import find_nodes
 from odk_tools.tracking import Tracker
 from xflow_client import XFlowClient, ValueListClient
 
@@ -31,6 +32,60 @@ async def opdater_organisationer_i_XFlow():
     
     # Laver listen om til det format, der kræves af Xflow
     organisationer = [{"value": x["name"], "key": str(i + 1), "oprettetAf": "RPA", "indeks" : str(i + 1)} for i, x in enumerate(alle_organisationer)]
+    try:
+        værdilisteklient.update_value_list(
+            værdiliste_uuid,
+            organisationer,
+        )
+    except Exception as e:
+        logger.error(f"Failed to update value list: {e}")
+# Bruger en liste af godkendte organisationer til at opdatere værdilisten i XFlow
+async def opdater_godkendte_organisationer_i_XFlow_til_POF():
+    logger = logging.getLogger(__name__)
+    logger.info("Opdaterer godkendte organisationer i Nexus til POF")
+
+    # Liste af godkendte organisationer
+    godkendt_liste = ["Lysningen",
+                    "Erhvervet hjerneskade",
+                    "Fysisk Funktionsnedsættelse",
+                    "E-Team",
+                    "Vedvarende sygdomsudvikling 1",
+                    "Vedvarende sygdomsudvikling 2",
+                    "Kære Pleje Odense ApS",
+                    "Svane Pleje, Syd ApS"
+    ]
+
+    # Finder værdiliste samt UUID for værdilisten
+    værdiliste = værdilisteklient.search_value_lists("Nexus - organisationer til POF-robot")
+    værdiliste_uuid = værdiliste[0]["id"] if værdiliste else None
+    if værdiliste_uuid is None:
+        logger.error("Værdiliste 'Nexus - organisationer til POF-robot' blev ikke fundet.")
+        return
+
+    # Henter organisationer fra Nexus
+    alle_organisationer = nexus_organisationer.hent_organisationer_med_træhierarki()
+
+    # Finder alle godkendte organisationer i listen
+    filtrerede_organisationer = find_nodes(
+        alle_organisationer,
+        lambda org: org.get("name", "") in godkendt_liste
+    )
+
+    # Flatten strukturen så børn bliver flyttet op til rod niveau
+    def flatten_organisations(orgs):
+        flattened = []
+        for org in orgs:
+            # Tilføj organisationen selv
+            flattened.append(org)
+            # Hvis der er børn, tilføj dem rekursivt
+            if "children" in org and org["children"]:
+                flattened.extend(flatten_organisations(org["children"]))
+        return flattened
+    
+    filtrerede_organisationer = flatten_organisations(filtrerede_organisationer)
+
+    # Laver listen om til det format, der kræves af Xflow
+    organisationer = [{"value": x["name"], "key": str(i + 1), "oprettetAf": "RPA", "indeks" : str(i + 1)} for i, x in enumerate(filtrerede_organisationer)]
     try:
         værdilisteklient.update_value_list(
             værdiliste_uuid,
@@ -131,6 +186,8 @@ if __name__ == "__main__":
     )
 
     asyncio.run(opdater_organisationer_i_XFlow())
+
+    asyncio.run(opdater_godkendte_organisationer_i_XFlow_til_POF())
 
     asyncio.run(opdater_leverandører_i_XFlow())
 
