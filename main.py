@@ -45,7 +45,9 @@ async def opdater_godkendte_organisationer_i_XFlow_til_POF():
     logger.info("Opdaterer godkendte organisationer i Nexus til POF")
 
     # Liste af godkendte organisationer
-    godkendt_liste = ["Lysningen",
+    godkendt_liste = [
+                    "Flenco-Carelink Pleje",
+                    "Lysningen",
                     "Erhvervet hjerneskade",
                     "Fysisk Funktionsnedsættelse",
                     "E-Team",
