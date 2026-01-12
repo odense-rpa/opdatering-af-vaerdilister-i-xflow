@@ -54,7 +54,8 @@ async def opdater_godkendte_organisationer_i_XFlow_til_POF():
                     "Vedvarende sygdomsudvikling 1",
                     "Vedvarende sygdomsudvikling 2",
                     "Kære Pleje Odense ApS",
-                    "Svane Pleje, Syd ApS"
+                    "Svane Pleje, Syd ApS",
+                    "Lindvedgruppen"
     ]
 
     # Finder værdiliste samt UUID for værdilisten
