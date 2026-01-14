@@ -55,7 +55,24 @@ async def opdater_godkendte_organisationer_i_XFlow_til_POF():
                     "Vedvarende sygdomsudvikling 2",
                     "Kære Pleje Odense ApS",
                     "Svane Pleje, Syd ApS",
-                    "Lindvedgruppen"
+                    "Lindvedgruppen",
+                    "Kalørgruppen",
+                    "Tagtækkergruppen",
+                    "Skibhusgruppen",
+                    "Munkebjerg",
+                    "Fruens Bøgegruppen",
+                    "Kalør",
+                    "Næsbygruppen",
+                    "Skt. Hansgruppen",
+                    "Hunderupgruppen",
+                    "Rosengårdsgruppen",
+                    "Stadiongruppen",
+                    "Mågebakkegruppen",
+                    "Aftengruppen Risingsvej",
+                    "Aftengruppen Lavsenvænget",
+                    "Aftengruppen Syd-Øst",
+                    "Aftengruppen Syd-Vest",
+                    "Natgruppen Område 1 - Udkørende",             
     ]
 
     # Finder værdiliste samt UUID for værdilisten
