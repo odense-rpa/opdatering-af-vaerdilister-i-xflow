@@ -46,33 +46,19 @@ async def opdater_godkendte_organisationer_i_XFlow_til_POF():
 
     # Liste af godkendte organisationer
     godkendt_liste = [
-                    "Flenco-Carelink Pleje",
-                    "Lysningen",
-                    "Erhvervet hjerneskade",
-                    "Fysisk Funktionsnedsættelse",
+                    "Plejehjem område 1",
+                    "Plejehjem område 2",
+                    "Udkørende grupper område 1",
+                    "Udkørende grupper område 2",
+                    "Lavsengruppen",
+                    "Benediktsgruppen",
+                    "Stenløkkegruppen",
+                    "Åsumgruppen",
                     "E-Team",
-                    "Vedvarende sygdomsudvikling 1",
-                    "Vedvarende sygdomsudvikling 2",
+                    "Lysningen",
                     "Kære Pleje Odense ApS",
                     "Svane Pleje, Syd ApS",
-                    "Lindvedgruppen",
-                    "Kalørgruppen",
-                    "Tagtækkergruppen",
-                    "Skibhusgruppen",
-                    "Munkebjerg",
-                    "Fruens Bøgegruppen",
-                    "Kalør",
-                    "Næsbygruppen",
-                    "Skt. Hansgruppen",
-                    "Hunderupgruppen",
-                    "Rosengårdsgruppen",
-                    "Stadiongruppen",
-                    "Mågebakkegruppen",
-                    "Aftengruppen Risingsvej",
-                    "Aftengruppen Lavsenvænget",
-                    "Aftengruppen Syd-Øst",
-                    "Aftengruppen Syd-Vest",
-                    "Natgruppen Område 1 - Udkørende",             
+                    "Flenco-Carelink Pleje"
     ]
 
     # Finder værdiliste samt UUID for værdilisten
