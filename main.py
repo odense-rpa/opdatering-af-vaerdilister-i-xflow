@@ -58,7 +58,12 @@ async def opdater_godkendte_organisationer_i_XFlow_til_POF():
                     "Lysningen",
                     "Kære Pleje Odense ApS",
                     "Svane Pleje, Syd ApS",
-                    "Flenco-Carelink Pleje"
+                    "Flenco-Carelink Pleje",
+                    "Dyruphus",
+                    "Gurli Vibeke",
+                    "Lokalcenter Rosengård Plejecenter",
+                    "Lokalcenter Rosengård Nord",
+                    "Lokalcenter Rosengård Syd "
     ]
 
     # Finder værdiliste samt UUID for værdilisten
